@@ -1,43 +1,98 @@
 from random import choice
 from colorama import Fore, Style, init
-import Resources.StateObject as SO
+from typing import Optional
+from dataclasses import dataclass
 
 # Initialize colorama
 init(autoreset=True)
 
-def get_random_province(provinces):
-    """Select a random province from the dictionary."""
-    return choice(list(provinces.keys()))
+@dataclass
+class GameState:
+    current_province: str
+    target_province: str
+    moves: int = 0
 
-def get_direction_input():
-    """Prompt the user for a direction input."""
-    available_directions = ["norr", "nordöst", "öster", "sydöst", "söder", "sydväst", "väst", "nordväst"]
-    selected_direction = input('In what direction do you want to go? \nAnswer: ').lower()
-    if selected_direction in available_directions:
-        return selected_direction
+class ProvinceGame:
+    DIRECTIONS = ["norr", "nordöst", "öster", "sydöst", "söder", "sydväst", "väst", "nordväst"]
+    
+    def __init__(self, provinces: dict):
+        self.provinces = provinces
+        self.state = self._initialize_game()
 
-    return ""
+    def _initialize_game(self) -> GameState:
+        """Initialize a new game with random start and target provinces."""
+        all_provinces = list(self.provinces.keys())
+        start = choice(all_provinces)
+        target = choice([p for p in all_provinces if p != start])
+        return GameState(start, target)
 
-def print_colored(text, color):
-    """Print text in the specified color."""
-    print(color + text)
+    def get_valid_moves(self) -> list[str]:
+        """Return list of valid directions from current province."""
+        return [dir for dir in self.DIRECTIONS 
+                if dir in self.provinces[self.state.current_province]]
+
+    def move(self, direction: str) -> tuple[bool, str]:
+        """
+        Attempt to move in the given direction.
+        Returns: (success, message)
+        """
+        if direction not in self.DIRECTIONS:
+            return False, "Ogiltig riktning. Försök igen."
+
+        next_province = self.provinces[self.state.current_province].get(direction)
+        if not next_province:
+            return False, f"Det finns ingen provins {direction} om {self.state.current_province}."
+
+        self.state.current_province = next_province
+        self.state.moves += 1
+        return True, f"Du går {direction} till {next_province}."
+
+    def is_complete(self) -> bool:
+        """Check if player has reached the target province."""
+        return self.state.current_province == self.state.target_province
+
+    def get_status(self) -> str:
+        """Get current game status message."""
+        return (f"Du är i {self.state.current_province}.\n"
+                f"Ditt mål är att nå {self.state.target_province}.\n"
+                f"Giltiga riktningar: {', '.join(self.get_valid_moves())}")
 
 def main():
-    current_province = get_random_province(SO.Provinces)
-
+    # Exempel på provinces dictionary
+    provinces = {
+        "Stockholm": {
+            "norr": "Uppsala",
+            "väst": "Västerås",
+            "söder": "Södertälje"
+        },
+        "Uppsala": {
+            "söder": "Stockholm",
+            "väst": "Västerås"
+        },
+        "Västerås": {
+            "öst": "Stockholm",
+            "nordöst": "Uppsala"
+        },
+        "Södertälje": {
+            "norr": "Stockholm"
+        }
+    }
+    
+    game = ProvinceGame(provinces)
+    print(Fore.GREEN + "Välkommen till Provinces-spelet!")
+    
     while True:
-        print_colored(f"You're now standing in the province of {current_province.capitalize()}", Fore.GREEN)
-
-        while True:
-            direction = get_direction_input()
-            next_province = SO.Provinces[current_province].get(direction, "")
-
-            if next_province:
-                print_colored(f"You are moving into {next_province}.", Fore.BLUE)
-                current_province = next_province
-                break  # Exit the inner loop if the direction is valid
-            else:
-                print_colored("Invalid direction or no province in that direction. Please try again.", Fore.RED)
+        print(Fore.CYAN + game.get_status())
+        
+        direction = input("Vilken riktning vill du gå? ").lower()
+        success, message = game.move(direction)
+        
+        print(Fore.RED + message if not success else Fore.GREEN + message)
+        
+        if game.is_complete():
+            print(Fore.YELLOW + 
+                f"Grattis! Du nådde {game.state.target_province} på {game.state.moves} drag!")
+            break
 
 if __name__ == "__main__":
     main()

@@ -1,9 +1,9 @@
 Provinces = {
     "lappland":         {"norr": "", "nordöst": "", "öster": "norrbotten", "sydöst": "västerbotten", "söder": "ångermanland", "sydväst": "jämtland", "väst": "", "nordväst": ""},
     "ångermanland":     {"norr": "lappland", "nordöst": "västerbotten", "öster": "", "sydöst": "", "söder": "medelpad", "sydväst": "", "väst": "jämtland", "nordväst": ""},
-    "blekinge":         {"norr": "", "nordöst": "", "öster": "", "sydöst": "", "söder": "", "sydväst": "", "väst": "", "nordväst": ""},
-    "bohuslän":         {"norr": "", "nordöst": "", "öster": "", "sydöst": "", "söder": "", "sydväst": "", "väst": "", "nordväst": ""},
-    "dalarna":          {"norr": "", "nordöst": "", "öster": "", "sydöst": "", "söder": "", "sydväst": "", "väst": "", "nordväst": ""},
+    "blekinge":         {"norr": "småland", "nordöst": "", "öster": "", "sydöst": "", "söder": "", "sydväst": "", "väst": "skåne", "nordväst": ""},
+    "bohuslän":         {"norr": "dalsland", "nordöst": "dalsland", "öster": "västergötland", "sydöst": "västergötland", "söder": "västergötland", "sydväst": "", "väst": "", "nordväst": ""},
+    "dalarna":          {"norr": "härjedalen", "nordöst": "", "öster": None, "sydöst": "gästrikland", "söder": "västmanland", "sydväst": "värmland", "väst": "", "nordväst": ""},
     "dalsland":         {"norr": "", "nordöst": "", "öster": "", "sydöst": "", "söder": "", "sydväst": "", "väst": "", "nordväst": ""},
     "gästrikland":      {"norr": "", "nordöst": "", "öster": "", "sydöst": "", "söder": "", "sydväst": "", "väst": "", "nordväst": ""},
     "gotland":          {"norr": "", "nordöst": "", "öster": "", "sydöst": "", "söder": "", "sydväst": "", "väst": "", "nordväst": ""},
